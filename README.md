@@ -14,6 +14,5 @@ pip install -r requirements.txt
 
 ## TO DO list:
 
-- Change sentence "Help is on the way!" to "Check out this resource..."
-- Add the functionality "Hey Teacher!" to ask for specifit help.
-- Change the background image for the actualized image of marvelapp
+- Add the functionality "Hey Teacher!" to ask for specific help.
+- Change the background image for the actualized image of marvelapp.
