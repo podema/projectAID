@@ -29,6 +29,7 @@ class MainWindow(QWidget):
         self.qna.setExitEffect('fadeOut', 500)
         self.notifySignal.connect(self.qna.display)
         self.setLayout(self.layout)
+        os.environ['QT_MAC_WANTS_LAYER'] = '1'
     
     def notify(self, text, time):
         self.notifySignal.emit(text,"danger",time*1000, False)

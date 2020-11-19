@@ -48,5 +48,5 @@ if __name__ == '__main__':
     speechThread = model.Model()
     speechThread.addSpeechHandler(lambda x: speechAnalyze(mainWindow, x))
     speechThread.start()
-    
+  
     os._exit(app.exec_())
