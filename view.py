@@ -12,11 +12,12 @@ from QNotifications import QNotificationArea
 
 class MainWindow(QWidget):
     notifySignal = QtCore.pyqtSignal(str,str,int,bool)
+    changeImageSignal = QtCore.pyqtSignal(str)
     MARGIN = 20
 
-    def __init__(self):
+    def __init__(self, img):
         super().__init__()
-        imagePath = 'imgs/zoom.png'
+        imagePath = self.res_path(img) 
         self.layout = QtWidgets.QVBoxLayout()
         self.image = QPixmap(self.res_path(imagePath))
         self.image = self.image.scaled(self.image.width() - self.MARGIN, self.image.height() - self.MARGIN, QtCore.Qt.KeepAspectRatio)
@@ -28,11 +29,20 @@ class MainWindow(QWidget):
         self.qna.setEntryEffect('fadeIn', 500)
         self.qna.setExitEffect('fadeOut', 500)
         self.notifySignal.connect(self.qna.display)
+        self.changeImageSignal.connect(self._changeImage)
         self.setLayout(self.layout)
         os.environ['QT_MAC_WANTS_LAYER'] = '1'
     
     def notify(self, text, time):
         self.notifySignal.emit(text,"danger",time*1000, False)
+    
+    def changeImage(self, image):
+        self.changeImageSignal.emit(image)
+    
+    def _changeImage(self, imagePath):
+        self.image = QPixmap(self.res_path(imagePath))
+        self.image = self.image.scaled(self.image.width() - self.MARGIN, self.image.height() - self.MARGIN, QtCore.Qt.KeepAspectRatio)
+        self.label.setPixmap(self.image)
     
     def res_path(self, relative_path):
         """ Get absolute path to resource, works for dev and for PyInstaller """

@@ -5,6 +5,8 @@ import os
 from PyQt5.QtWidgets import QApplication
 import re
 import logging
+import threading
+import time
 
 parsers = [
     re.compile(".*I need help with ([^\s]*).*"),
@@ -37,16 +39,24 @@ def speechAnalyze(mainWindow, speech):
                 
             logging.info(f"notification sent : {notificationText}")
             mainWindow.notify(notificationText, 3)
+            changeImage()
             return
+    
+def changeImage():
+    threading.Thread(target=_changeImage).start()
+
+def _changeImage():
+    for i in [2,3,1]:
+        mainWindow.changeImage(f'imgs/image{i}.png')
+        time.sleep(1)
 
 if __name__ == '__main__':
     logging.basicConfig()
     logging.getLogger().setLevel(logging.INFO)
     app = QApplication(sys.argv)
-    mainWindow = view.MainWindow()
+    mainWindow = view.MainWindow('imgs/image1.png')
     mainWindow.showMaximized()
     speechThread = model.Model()
     speechThread.addSpeechHandler(lambda x: speechAnalyze(mainWindow, x))
     speechThread.start()
-  
     os._exit(app.exec_())
