@@ -26,7 +26,8 @@ parsers = [
     ".*I am lost.*",
     ".*I'm confused.*",
     ".*I can't understand.*",
-    ".*I think we are not understanding.*"
+    ".*I think we are not understanding.*",
+    ".*I think we're not understanding.*"
 ]
 changeImageRunning = False
 
@@ -61,9 +62,9 @@ def changeImage():
 
 def _changeImage():
     global changeImageRunning
-    for i in [2,3,1]:
+    for i in [1,2,3,0]:
         mainWindow.changeImage(f'imgs/image{i}.png')
-        if i == 2:
+        if (i == 2 or i == 1):
             time.sleep(1)
         elif i == 3:
             time.sleep(5)
@@ -79,7 +80,7 @@ if __name__ == '__main__':
     logging.basicConfig()
     logging.getLogger().setLevel(logging.INFO)
     app = QApplication(sys.argv)
-    mainWindow = view.MainWindow('imgs/image1.png')
+    mainWindow = view.MainWindow('imgs/image0.png')
     mainWindow.showMaximized()
     speechThread = model.Model()
     speechThread.addSpeechHandler(lambda x: speechAnalyze(mainWindow, x))
