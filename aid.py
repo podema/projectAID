@@ -26,8 +26,10 @@ parsers = [
     ".*I'm confused.*",
     ".*I can't understand.*"
 ]
+changeImageRunning = False
 
 def speechAnalyze(mainWindow, speech):
+    global changeImageRunning
     logging.info(f"speech detected : {speech}")
     for expr in parsers:
         match = expr.match(speech)
@@ -38,7 +40,9 @@ def speechAnalyze(mainWindow, speech):
                 notificationText = "It seems that you are stuck, check out this resource: https://miro.com/app/board/o9J_kiTrGzQ=/"
                 
             logging.info(f"notification sent : {notificationText}")
-            mainWindow.notify(notificationText, 3)
+            if changeImageRunning == False:
+                changeImageRunning = True
+                mainWindow.notify(notificationText, 3)
             changeImage()
             return
     
@@ -56,6 +60,7 @@ def _changeImage():
     for i in [2,3,1]:
         mainWindow.changeImage(f'imgs/image{i}.png')
         time.sleep(1)
+    changeImageRunning = False
 
 if __name__ == '__main__':
     compileRegexs()
