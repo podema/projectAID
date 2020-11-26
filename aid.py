@@ -23,12 +23,15 @@ parsers = [
     ".*I don't follow.*",
     ".*I can't follow.*",
     ".*I'm lost.*",
+    ".*I am lost.*",
     ".*I'm confused.*",
-    ".*I can't understand.*"
+    ".*I can't understand.*",
+    ".*I think we are not understanding.*"
 ]
 changeImageRunning = False
 
 def speechAnalyze(mainWindow, speech):
+    global parsers
     global changeImageRunning
     logging.info(f"speech detected : {speech}")
     for expr in parsers:
@@ -40,27 +43,36 @@ def speechAnalyze(mainWindow, speech):
                 notificationText = "It seems that you are stuck, check out this resource: https://miro.com/app/board/o9J_kiTrGzQ=/"
                 
             logging.info(f"notification sent : {notificationText}")
+            #mainWindow.notify(notificationText, 3)
             if changeImageRunning == False:
+                changeImage()
                 changeImageRunning = True
-                mainWindow.notify(notificationText, 3)
-            changeImage()
             return
     
 def compileRegexs():
     global parsers
     _parsers = []
     for parser in parsers:
-        re.compile(parser)
+        _parsers.append(re.compile(parser))
     parsers = _parsers
 
 def changeImage():
     threading.Thread(target=_changeImage).start()
 
 def _changeImage():
+    global changeImageRunning
     for i in [2,3,1]:
         mainWindow.changeImage(f'imgs/image{i}.png')
-        time.sleep(1)
+        if i == 2:
+            time.sleep(1)
+        elif i == 3:
+            time.sleep(5)
     changeImageRunning = False
+
+def test(mainWindow):
+    while True:
+        speechAnalyze(mainWindow, "I need help")
+        time.sleep(5)
 
 if __name__ == '__main__':
     compileRegexs()
@@ -72,4 +84,6 @@ if __name__ == '__main__':
     speechThread = model.Model()
     speechThread.addSpeechHandler(lambda x: speechAnalyze(mainWindow, x))
     speechThread.start()
+    #To test without speaking alone like a dumbass
+    #threading.Thread(target=lambda: test(mainWindow)).start()
     os._exit(app.exec_())
