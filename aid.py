@@ -9,22 +9,22 @@ import threading
 import time
 
 parsers = [
-    re.compile(".*I need help with ([^\s]*).*"),
-    re.compile(".*I have a problem with ([^\s]*).*"),
-    re.compile(".*I have an issue with ([^\s]*).*"),
-    re.compile(".*I need help.*"),
-    re.compile(".*I don't understand.*"),
-    re.compile(".*I'm stuck.*"),
-    re.compile(".*I don't get.*"),
-    re.compile(".*I didn't get.*"),
-    re.compile(".*I can't get.*"),
-    re.compile(".*It makes no sense.*"),
-    re.compile(".*It doesn't make sense.*"),
-    re.compile(".*I don't follow.*"),
-    re.compile(".*I can't follow.*"),
-    re.compile(".*I'm lost.*"),
-    re.compile(".*I'm confused.*"),
-    re.compile(".*I can't understand.*")
+    ".*I need help with ([^\s]*).*",
+    ".*I have a problem with ([^\s]*).*",
+    ".*I have an issue with ([^\s]*).*",
+    ".*I need help.*",
+    ".*I don't understand.*",
+    ".*I'm stuck.*",
+    ".*I don't get.*",
+    ".*I didn't get.*",
+    ".*I can't get.*",
+    ".*It makes no sense.*",
+    ".*It doesn't make sense.*",
+    ".*I don't follow.*",
+    ".*I can't follow.*",
+    ".*I'm lost.*",
+    ".*I'm confused.*",
+    ".*I can't understand.*"
 ]
 
 def speechAnalyze(mainWindow, speech):
@@ -42,6 +42,13 @@ def speechAnalyze(mainWindow, speech):
             changeImage()
             return
     
+def compileRegexs():
+    global parsers
+    _parsers = []
+    for parser in parsers:
+        re.compile(parser)
+    parsers = _parsers
+
 def changeImage():
     threading.Thread(target=_changeImage).start()
 
@@ -51,6 +58,7 @@ def _changeImage():
         time.sleep(1)
 
 if __name__ == '__main__':
+    compileRegexs()
     logging.basicConfig()
     logging.getLogger().setLevel(logging.INFO)
     app = QApplication(sys.argv)
